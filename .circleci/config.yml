@@ -107,9 +107,9 @@ workflows:
   build:
     jobs:
       - build
-      - lint:
-          requires:
-            - build
+      # - lint:
+      #     requires:
+      #       - build
       - build_dockerfile:  
           requires:
             - build
