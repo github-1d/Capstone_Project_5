@@ -58,33 +58,33 @@ jobs:
           command: |
             docker build -t monika2019/monika-flask-app:blue .
 
-  push_docker_image:
-    docker:
-      - image: docker:19.03.13
+  # push_docker_image:
+  #   docker:
+  #     - image: docker:19.03.13
 
-    steps:
-      - checkout
+  #   steps:
+  #     - checkout
 
-      # Push Docker image
-      - run:
-          name: Push Docker image
-          command: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            docker push monika2019/monika-flask-app:blue
+  #     # Push Docker image
+  #     - run:
+  #         name: Push Docker image
+  #         command: |
+  #           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  #           docker push monika2019/monika-flask-app:blue
 
-  deploy_eks_cluster:
-    docker:
-      - image: amazonlinux:2
+  # deploy_eks_cluster:
+  #   docker:
+  #     - image: amazonlinux:2
 
-    steps:
-      - checkout
+  #   steps:
+  #     - checkout
 
-      # Deploy EKS Cluster using CloudFormation
-      - run:
-          name: Deploy EKS Cluster
-          command: |
-            aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
-            aws cloudformation wait stack-create-complete --stack-name my-eks-stack
+  #     # Deploy EKS Cluster using CloudFormation
+  #     - run:
+  #         name: Deploy EKS Cluster
+  #         command: |
+  #           aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
+  #           aws cloudformation wait stack-create-complete --stack-name my-eks-stack
 
 workflows:
   version: 2
@@ -92,9 +92,9 @@ workflows:
     jobs:
       - lint
       - build_dockerfile
-      - push_docker_image:
-          requires:
-            - build_dockerfile
-      - deploy_eks_cluster:
-          requires:
-            - push_docker_image
+      # - push_docker_image:
+      #     requires:
+      #       - build_dockerfile
+      # - deploy_eks_cluster:
+      #     requires:
+      #       - push_docker_image
