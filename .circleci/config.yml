@@ -1,0 +1,100 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      # Use the same Docker base as the project
+      - image: python:3.7.3-stretch
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            make install
+            # Install hadolint
+            wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
+            chmod +x /bin/hadolint
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+  lint:
+    docker:
+      - image: python:3.9
+
+    steps:
+      - checkout
+
+      # Linting step
+      - run:
+          name: run lint
+          command: |
+            . venv/bin/activate
+            make lint
+
+  build_dockerfile:
+    docker:
+      - image: docker:19.03.13
+
+    steps:
+      - checkout
+
+      # Build Docker image
+      - run:
+          name: Build Docker image
+          command: |
+            docker build -t monika2019/monika-flask-app:blue .
+
+  push_docker_image:
+    docker:
+      - image: docker:19.03.13
+
+    steps:
+      - checkout
+
+      # Push Docker image
+      - run:
+          name: Push Docker image
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            docker push monika2019/monika-flask-app:blue
+
+  deploy_eks_cluster:
+    docker:
+      - image: amazonlinux:2
+
+    steps:
+      - checkout
+
+      # Deploy EKS Cluster using CloudFormation
+      - run:
+          name: Deploy EKS Cluster
+          command: |
+            aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
+            aws cloudformation wait stack-create-complete --stack-name my-eks-stack
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - lint
+      - build_dockerfile
+      - push_docker_image:
+          requires:
+            - build_dockerfile
+      - deploy_eks_cluster:
+          requires:
+            - push_docker_image
