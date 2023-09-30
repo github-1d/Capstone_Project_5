@@ -41,12 +41,12 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
-            
+
       # Linting step
       - run:
           name: run lint
           command: |
-            . venv/bin/activate
+            source venv/bin/activate
             make lint
 
   build_dockerfile:
