@@ -25,34 +25,41 @@ jobs:
             # Install hadolint
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
             chmod +x /bin/hadolint
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - venv
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-
-  lint:
-    docker:
-      - image: python:3.9
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-            at: /venv
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "requirements.txt" }}
 
       # Linting step
       - run:
           name: run lint
           command: |
-            source venv/bin/activate
+            . venv/bin/activate
             make lint
+      # - persist_to_workspace:
+      #     root: ~/
+      #     paths:
+      #       - venv
+      # - save_cache:
+      #     paths:
+      #       - ./venv
+      #     key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+  # lint:
+  #   docker:
+  #     - image: python:3.9
+
+  #   steps:
+  #     - checkout
+
+  #     - attach_workspace:
+  #           at: /venv
+  #     - restore_cache:
+  #         keys:
+  #           - v1-dependencies-{{ checksum "requirements.txt" }}
+
+  #     # Linting step
+  #     - run:
+  #         name: run lint
+  #         command: |
+  #           source venv/bin/activate
+  #           make lint
 
   build_dockerfile:
     docker:
