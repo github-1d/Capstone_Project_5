@@ -25,7 +25,10 @@ jobs:
             # Install hadolint
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 &&\
             chmod +x /bin/hadolint
-
+      - persist_to_workspace:
+          root: /venv
+          paths:
+            - venv
       - save_cache:
           paths:
             - ./venv
@@ -38,6 +41,8 @@ jobs:
     steps:
       - checkout
 
+      - attach_workspace:
+            at: /venv
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
