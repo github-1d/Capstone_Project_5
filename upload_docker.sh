@@ -10,7 +10,7 @@ dockerpath="monika2019/monika-flask-app"
 # Step 2:  
 # Authenticate & tag
 echo "Docker ID and Image: $dockerpath"
-docker load -i /monika-flask-app-latest.tar
+docker load -i /workspace/monika-flask-app-latest.tar
 # docker login --username monika2019
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 docker image tag monika-flask-app $dockerpath

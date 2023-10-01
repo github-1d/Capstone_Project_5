@@ -77,7 +77,7 @@ jobs:
              sh ./run_docker.sh
 
       - persist_to_workspace:
-          root: ~/
+          root: /tmp
           paths:
             - project/monika-flask-app-latest.tar
 
@@ -91,7 +91,7 @@ jobs:
           docker_layer_caching: true
 
       - attach_workspace:
-          at: ~/
+          at: /workspace
 
       # Push Docker image
       - run:
