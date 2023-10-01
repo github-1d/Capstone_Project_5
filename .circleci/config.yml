@@ -63,16 +63,16 @@ jobs:
 
   build_dockerfile:
     docker:
-      - image: docker:19.03.13
+      - image: docker:latest
 
     steps:
       - checkout
-
+      - setup_remote_docker
       # Build Docker image
       - run:
           name: Build Docker image
           command: |
-            docker build -t monika2019/monika-flask-app:blue .
+             sh ./run_docker.sh
 
   # push_docker_image:
   #   docker:
