@@ -12,7 +12,7 @@ dockerpath="monika2019/monika-flask-app"
 echo "Docker ID and Image: $dockerpath"
 # docker login --username monika2019
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-# docker image tag monika-flask-app:blue $dockerpath
+docker image tag monika-flask-app $dockerpath
 
 # Step 3:
 # Push image to a docker repository
