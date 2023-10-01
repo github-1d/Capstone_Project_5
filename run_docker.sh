@@ -8,6 +8,9 @@ docker build --tag monika-flask-app .
 # Step 2: 
 docker images
 
+# Step 3:
+docker save monika-flask-app:latest > /tmp/monika-flask-app-latest.tar
+
 # Step 3: 
 # Run flask app
 # docker run -p 8000:80 monika-flask-app:blue

@@ -69,11 +69,17 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-      # Build Docker image
+
+      # Build and Save Docker image
       - run:
           name: Build Docker image
           command: |
              sh ./run_docker.sh
+
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - monika-flask-app-latest.tar
 
   push_docker_image:
     docker:
@@ -83,6 +89,9 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
+
+       - attach_workspace:
+          at: ~/
 
       # Push Docker image
       - run:
