@@ -112,7 +112,7 @@ workflows:
       #       - build
       - build_dockerfile:  
           requires:
-            - build
+            - setup
       # - push_docker_image:
       #     requires:
       #       - build_dockerfile
