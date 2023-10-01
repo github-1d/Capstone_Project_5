@@ -77,7 +77,7 @@ jobs:
              sh ./run_docker.sh
 
       - persist_to_workspace:
-          root: ~/
+          root: /
           paths:
             - monika-flask-app-latest.tar
 
