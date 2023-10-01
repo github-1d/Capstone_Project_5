@@ -10,6 +10,7 @@ docker images
 
 # Step 3:
 docker save monika-flask-app:latest > /monika-flask-app-latest.tar
+ls
 
 # Step 3: 
 # Run flask app
