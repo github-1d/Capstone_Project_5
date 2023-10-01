@@ -79,7 +79,7 @@ jobs:
       - persist_to_workspace:
           root: /
           paths:
-            - /workspace/monika-flask-app-latest.tar
+            - monika-flask-app-latest.tar
 
   push_docker_image:
     docker:
