@@ -9,7 +9,7 @@ docker build --tag monika-flask-app .
 docker images
 
 # Step 3:
-docker save monika-flask-app:latest > monika-flask-app-latest.tar
+docker save monika-flask-app:latest -o monika-flask-app-latest.tar
 ls
 
 # Step 3: 
