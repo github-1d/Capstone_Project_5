@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: capstone-deployment
+spec:
+  replicas: 3  
+  selector:
+    matchLabels:
+      app: capstone
+  template:
+    metadata:
+      labels:
+        app: capstone
+    spec:
+      containers:
+        - name: capstone
+          image: monika2019/monika-flask-app:latest
+          ports:
+            - containerPort: 80  

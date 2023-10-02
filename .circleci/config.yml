@@ -109,6 +109,49 @@ jobs:
             # aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
             # aws cloudformation wait stack-create-complete --stack-name my-eks-stack
 
+  deploy_eks_cluster:
+    docker:
+      - image: amazonlinux:latest
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install tar and gzip
+          command: |
+            yum update -y
+            yum install -y tar gzip
+
+      - run:
+          name: Install kubectl
+          command: |
+            curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mv ./kubectl /usr/local/bin/kubectl
+            kubectl version --client
+
+      - run:
+          name: Install eksctl
+          command: |
+            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+            mv /tmp/eksctl /usr/local/bin
+
+      # update kube config
+      - run:
+          name: update kube config
+          command: |
+            aws eks update-kubeconfig --name capstone --region us-east-1
+
+      - run:
+          name: verify kube config
+          command: |
+            kubectl config get-contexts
+
+      - run:
+          name: deploy application
+          command: |
+            kubectl apply -f deployment.yaml
+
 workflows:
   version: 2
   build:
@@ -120,9 +163,9 @@ workflows:
       # - push_docker_image:
       #     requires:
       #       - build_dockerfile
-      - create_eks_cluster
+      # - create_eks_cluster
           # requires:
           #   - push_docker_image
       # - deploy_eks_cluster:
       #     requires:
-      #       - push_docker_image
+      #       - create_eks_cluster
