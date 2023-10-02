@@ -117,6 +117,7 @@ workflows:
       - push_docker_image:
           requires:
             - build_dockerfile
+      - create_eks_cluster
       # - deploy_eks_cluster:
       #     requires:
       #       - push_docker_image
