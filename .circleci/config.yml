@@ -32,34 +32,8 @@ jobs:
           command: |
             . venv/bin/activate
             make lint
-      # - persist_to_workspace:
-      #     root: ~/
-      #     paths:
-      #       - venv
-      # - save_cache:
-      #     paths:
-      #       - ./venv
-      #     key: v1-dependencies-{{ checksum "requirements.txt" }}
 
-  # lint:
-  #   docker:
-  #     - image: python:3.9
-
-  #   steps:
-  #     - checkout
-
-  #     - attach_workspace:
-  #           at: /venv
-  #     - restore_cache:
-  #         keys:
-  #           - v1-dependencies-{{ checksum "requirements.txt" }}
-
-  #     # Linting step
-  #     - run:
-  #         name: run lint
-  #         command: |
-  #           source venv/bin/activate
-  #           make lint
+# Build Docker image 
 
   build_dockerfile:
     docker:
@@ -81,6 +55,7 @@ jobs:
           paths:
             - project/monika-flask-app-latest.tar
 
+# Push docker image to Docker Hub
   push_docker_image:
     docker:
       - image: docker:latest
@@ -97,8 +72,6 @@ jobs:
       - run:
           name: Push Docker image
           command: |
-            # echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            # docker push monika2019/monika-flask-app:blue
             sh ./upload_docker.sh
 
   # deploy_eks_cluster:
@@ -120,9 +93,6 @@ workflows:
   build:
     jobs:
       - setup
-      # - lint:
-      #     requires:
-      #       - build
       - build_dockerfile:  
           requires:
             - setup
