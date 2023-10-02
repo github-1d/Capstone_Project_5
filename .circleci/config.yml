@@ -105,7 +105,7 @@ jobs:
       - run:
           name: Create EKS Cluster
           command: |
-            eksctl create cluster --name capstone-cluster --region=us-east-1
+            eksctl create cluster --name capstone --region=us-east-1
             # aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
             # aws cloudformation wait stack-create-complete --stack-name my-eks-stack
 
@@ -159,15 +159,15 @@ workflows:
   build:
     jobs:
       - setup
-      - build_dockerfile:  
-          requires:
-            - setup
-      - push_docker_image:
-          requires:
-            - build_dockerfile
-      - create_eks_cluster:
-          requires:
-            - push_docker_image
-      - deploy_eks_cluster:
-          requires:
-            - create_eks_cluster
+      # - build_dockerfile:  
+      #     requires:
+      #       - setup
+      # - push_docker_image:
+      #     requires:
+      #       - build_dockerfile
+      # - create_eks_cluster:
+      #     requires:
+      #       - push_docker_image
+      # - deploy_eks_cluster:
+      #     requires:
+      #       - create_eks_cluster
