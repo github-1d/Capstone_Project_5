@@ -86,17 +86,14 @@ jobs:
           command: |
             curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
             chmod +x ./kubectl
-            sudo mv ./kubectl /usr/local/bin/kubectl
+            mv ./kubectl /usr/local/bin/kubectl
             kubectl version --client
-
-            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-            sudo mv /tmp/eksctl /usr/local/bin
 
       - run:
           name: Install eksctl
           command: |
             curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-            sudo mv /tmp/eksctl /usr/local/bin
+            mv /tmp/eksctl /usr/local/bin
 
       # Create EKS Cluster using eksctl
       - run:
@@ -110,16 +107,16 @@ workflows:
   version: 2
   build:
     jobs:
-      - setup
-      - build_dockerfile:  
-          requires:
-            - setup
-      - push_docker_image:
-          requires:
-            - build_dockerfile
-      - create_eks_cluster:
-          requires:
-            - push_docker_image
+      # - setup
+      # - build_dockerfile:  
+      #     requires:
+      #       - setup
+      # - push_docker_image:
+      #     requires:
+      #       - build_dockerfile
+      - create_eks_cluster
+          # requires:
+          #   - push_docker_image
       # - deploy_eks_cluster:
       #     requires:
       #       - push_docker_image
