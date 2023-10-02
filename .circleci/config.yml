@@ -84,7 +84,8 @@ jobs:
       - run:
           name: Install tar and gzip
           command: |
-            apk add --update tar gzip nodejs npm curl  
+            yum update -y
+            yum install -y tar gzip
 
       - run:
           name: Install kubectl
