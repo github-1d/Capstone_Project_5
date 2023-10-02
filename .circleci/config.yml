@@ -76,10 +76,15 @@ jobs:
 
   create_eks_cluster:
     docker:
-      - image: amazonlinux:2
+      - image: amazonlinux:latest
 
     steps:
       - checkout
+
+      - run:
+          name: Install tar and gzip
+          command: |
+            apk add --update tar gzip nodejs npm curl  
 
       - run:
           name: Install kubectl
@@ -92,7 +97,7 @@ jobs:
       - run:
           name: Install eksctl
           command: |
-            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+            ccurl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
             mv /tmp/eksctl /usr/local/bin
 
       # Create EKS Cluster using eksctl
