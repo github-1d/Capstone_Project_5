@@ -212,10 +212,16 @@ jobs:
             mv ./kubectl /usr/local/bin/kubectl
             kubectl version --client
 
-      # - run:
-      #     name: get deployment
-      #     command: |
-      #       kubectl get deployments
+       # update kube config
+      - run:
+          name: update kube config
+          command: |
+            aws eks update-kubeconfig --name capstone --region us-east-2
+
+      - run:
+          name: get deployment
+          command: |
+            kubectl get deployments
 
       - run:
           name: verify pods
