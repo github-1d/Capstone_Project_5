@@ -136,20 +136,22 @@ jobs:
             curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
             mv /tmp/eksctl /usr/local/bin
 
-      # Create EKS Cluster using eksctl
+      # Create or updating EKS Cluster using eksctl
       - run:
-          name: Create EKS Cluster
+          name: Create or update EKS Cluster
           command: |
-            eksctl create cluster --name capstone --region=us-east-2
-            # aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
-            # aws cloudformation wait stack-create-complete --stack-name my-eks-stack
+            if ! kubectl get nodes &>/dev/null; then
+              # create cluster
+              eksctl create cluster --name capstone --region=us-east-2
+            else
+              echo "Cluster already exists. Skipping cluster creation."
+            fi
 
       - destroy-environment
 
   deploy_eks_cluster:
     docker:
       - image: amazon/aws-cli
-      # - image: amazonlinux:latest
 
     steps:
       - checkout
@@ -202,7 +204,7 @@ jobs:
     steps:
       - checkout
 
-       - run:
+      - run:
           name: Install kubectl
           command: |
             curl -LO https://dl.k8s.io/release/v1.25.0/bin/linux/amd64/kubectl
