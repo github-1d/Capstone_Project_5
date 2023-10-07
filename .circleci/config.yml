@@ -85,7 +85,7 @@ jobs:
           command: |
             sh ./upload_docker.sh
 
-
+  # Security Scan of the docker image
   security-scan:
     docker:
       - image: amazonlinux:latest
@@ -109,6 +109,7 @@ jobs:
             # Run Trivy security scan
             trivy image monika-flask-app
 
+  # Create cluster if not already created
   create_eks_cluster:
     docker:
       - image: amazonlinux:latest
@@ -140,14 +141,16 @@ jobs:
       - run:
           name: Create or update EKS Cluster
           command: |
-            if ! kubectl get nodes &>/dev/null; then
-              # create cluster
-              eksctl create cluster --name capstone --region=us-east-2
-            else
+            if eksctl get cluster --name your-cluster-name &> /dev/null; then
               echo "Cluster already exists. Skipping cluster creation."
+            else
+               # create cluster
+              eksctl create cluster --name capstone --region=us-east-2
             fi
 
       - destroy-environment
+
+  # Rolling updates
 
   deploy_eks_cluster:
     docker:
@@ -196,6 +199,7 @@ jobs:
 
       - destroy-environment
 
+  # Verify post deployments
 
   verify_post_deployment:
     docker:
