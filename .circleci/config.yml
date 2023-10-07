@@ -8,8 +8,8 @@ commands:
               name: Destroy environments
               when: on_fail
               command: |
-                eksctl delete cluster --region=us-east-1 --name=capstone
                 aws cloudformation delete-stack --stack-name eksctl-capstone-cluster
+                eksctl delete cluster --region=us-east-2 --name=capstone
 
 jobs:
   setup:
@@ -116,7 +116,7 @@ jobs:
       - run:
           name: Create EKS Cluster
           command: |
-            eksctl create cluster --name capstone --region=us-east-1
+            eksctl create cluster --name capstone --region=us-east-2
             # aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
             # aws cloudformation wait stack-create-complete --stack-name my-eks-stack
 
@@ -153,7 +153,7 @@ jobs:
       - run:
           name: update kube config
           command: |
-            aws eks update-kubeconfig --name capstone --region us-east-1
+            aws eks update-kubeconfig --name capstone --region us-east-2
 
       - run:
           name: verify kube config
