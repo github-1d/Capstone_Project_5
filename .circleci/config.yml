@@ -202,15 +202,15 @@ jobs:
           command: |
             kubectl get deployments
 
-     - run:
-        name: verify pods
-        command: |
-          kubectl get pods
+      - run:
+          name: verify pods
+          command: |
+            kubectl get pods
     
-    - run:
-        name: verify services
-        command: |
-          kubectl get services
+      - run:
+          name: verify services
+          command: |
+            kubectl get services
 
 workflows:
   version: 2
