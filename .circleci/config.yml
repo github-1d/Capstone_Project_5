@@ -159,15 +159,15 @@ workflows:
   build:
     jobs:
       - setup
-      # - build_dockerfile:  
-      #     requires:
-      #       - setup
-      # - push_docker_image:
-      #     requires:
-      #       - build_dockerfile
-      # - create_eks_cluster:
-      #     requires:
-      #       - push_docker_image
-      # - deploy_eks_cluster:
-      #     requires:
-      #       - create_eks_cluster
+      - build_dockerfile:  
+          requires:
+            - setup
+      - push_docker_image:
+          requires:
+            - build_dockerfile
+      - create_eks_cluster:
+          requires:
+            - push_docker_image
+      - deploy_eks_cluster:
+          requires:
+            - create_eks_cluster
