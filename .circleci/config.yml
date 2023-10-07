@@ -96,10 +96,12 @@ jobs:
           name: Security Scan with Trivy
           command: |
             # Install Trivy
-            yum update
-            yum install -y wget && yum install -y dpkg
-            wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb \
-                && dpkg -i trivy_0.18.3_Linux-64bit.deb
+            # Install wget to download Trivy RPM package
+            yum install -y wget
+
+            # Download and install the Trivy RPM package
+            wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.rpm \
+                && yum install -y trivy_0.18.3_Linux-64bit.rpm
 
             # Run Trivy security scan
             trivy image monika-flask-app
