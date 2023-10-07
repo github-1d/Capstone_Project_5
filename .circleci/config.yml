@@ -1,5 +1,16 @@
 version: 2.1
 
+commands:
+    destroy-environment:
+        description: Destroy cluster.
+        steps:
+          - run:
+              name: Destroy environments
+              when: on_fail
+              command: |
+                eksctl delete cluster --region=us-east-1 --name=capstone
+                aws cloudformation delete-stack --stack-name eksctl-capstone-cluster
+
 jobs:
   setup:
     docker:
@@ -108,6 +119,8 @@ jobs:
             eksctl create cluster --name capstone --region=us-east-1
             # aws cloudformation create-stack --stack-name my-eks-stack --template-body file://eks-cluster.yaml
             # aws cloudformation wait stack-create-complete --stack-name my-eks-stack
+
+      - destroy-environment
 
   deploy_eks_cluster:
     docker:
