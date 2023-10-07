@@ -124,7 +124,8 @@ jobs:
 
   deploy_eks_cluster:
     docker:
-      - image: amazonlinux:latest
+      - image: amazon/aws-cli
+      # - image: amazonlinux:latest
 
     steps:
       - checkout
@@ -166,6 +167,8 @@ jobs:
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
             kubectl get svc capstone-service
+
+      - destroy-environment
 
 workflows:
   version: 2
