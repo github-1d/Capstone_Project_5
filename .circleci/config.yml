@@ -141,7 +141,7 @@ jobs:
       - run:
           name: Create or update EKS Cluster
           command: |
-            if eksctl get cluster --name your-cluster-name &> /dev/null; then
+            if eksctl get cluster --name capstone &> /dev/null; then
               echo "Cluster already exists. Skipping cluster creation."
             else
                # create cluster
