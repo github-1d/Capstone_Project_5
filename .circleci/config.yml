@@ -96,8 +96,8 @@ jobs:
           name: Security Scan with Trivy
           command: |
             # Install Trivy
-            apt-get update
-            apt-get install -y wget && apt-get install -y dpkg
+            yum update
+            yum install -y wget && apt-get install -y dpkg
             wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb \
                 && dpkg -i trivy_0.18.3_Linux-64bit.deb
 
