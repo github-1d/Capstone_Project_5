@@ -89,6 +89,7 @@ jobs:
   security-scan:
     docker:
       - image: docker:latest
+
     steps:
       - checkout
       - run:
@@ -202,14 +203,14 @@ jobs:
             kubectl get deployments
 
      - run:
-          name: verify pods
-          command: |
-            kubectl get pods
+        name: verify pods
+        command: |
+          kubectl get pods
     
     - run:
-          name: verify services
-          command: |
-            kubectl get services
+        name: verify services
+        command: |
+          kubectl get services
 
 workflows:
   version: 2
