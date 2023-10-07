@@ -97,7 +97,7 @@ jobs:
           command: |
             # Install Trivy
             yum update
-            yum install -y wget && apt-get install -y dpkg
+            yum install -y wget && yum install -y dpkg
             wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb \
                 && dpkg -i trivy_0.18.3_Linux-64bit.deb
 
