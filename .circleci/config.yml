@@ -212,10 +212,10 @@ jobs:
             mv ./kubectl /usr/local/bin/kubectl
             kubectl version --client
 
-      - run:
-          name: get deployment
-          command: |
-            kubectl get deployments
+      # - run:
+      #     name: get deployment
+      #     command: |
+      #       kubectl get deployments
 
       - run:
           name: verify pods
