@@ -85,6 +85,24 @@ jobs:
           command: |
             sh ./upload_docker.sh
 
+
+  security-scan:
+    docker:
+      - image: docker:latest
+    steps:
+      - checkout
+      - run:
+          name: Security Scan with Trivy
+          command: |
+            # Install Trivy
+            apt-get update
+            apt-get install -y wget && apt-get install -y dpkg
+            wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb \
+                && dpkg -i trivy_0.18.3_Linux-64bit.deb
+
+            # Run Trivy security scan
+            trivy image monika-flask-app
+
   create_eks_cluster:
     docker:
       - image: amazonlinux:latest
@@ -162,13 +180,36 @@ jobs:
             kubectl config get-contexts
 
       - run:
-          name: deploy application
+          name: update deployment
           command: |
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
             kubectl get svc capstone-service
 
       - destroy-environment
+
+
+  verify_post_deployment:
+    docker:
+      - image: amazon/aws-cli
+
+    steps:
+      - checkout
+
+      - run:
+          name: get deployment
+          command: |
+            kubectl get deployments
+
+     - run:
+          name: verify pods
+          command: |
+            kubectl get pods
+    
+    - run:
+          name: verify services
+          command: |
+            kubectl get services
 
 workflows:
   version: 2
@@ -181,9 +222,15 @@ workflows:
       - push_docker_image:
           requires:
             - build_dockerfile
-      - create_eks_cluster:
+      - security-scan:
           requires:
             - push_docker_image
+      - create_eks_cluster:
+          requires:
+            - security-scan
       - deploy_eks_cluster:
           requires:
             - create_eks_cluster
+      - verify_post_deployment:
+          requires:
+            - deploy_eks_cluster
